@@ -22,7 +22,11 @@ app.use('/notifications', notificationRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    paymentProvider: 'intasend'
+  });
 });
 
 export const api = functions.https.onRequest(app);
@@ -56,7 +60,6 @@ export const cleanupExpiredListings = functions.pubsub
 export const generateSitemap = functions.pubsub
   .schedule('every week')
   .onRun(async (context) => {
-    // Generate XML sitemap for SEO
     const db = admin.firestore();
     const businesses = await db.collection('businesses')
       .where('status', '==', 'active')
@@ -78,7 +81,6 @@ export const generateSitemap = functions.pubsub
     
     sitemap += '</urlset>';
     
-    // Save to Cloud Storage
     const bucket = admin.storage().bucket();
     const file = bucket.file('sitemaps/businesses.xml');
     await file.save(sitemap, { contentType: 'application/xml' });
