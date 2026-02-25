@@ -7,18 +7,23 @@ import * as axios from 'axios';
 const router = Router();
 const db = admin.firestore();
 
-// Intasend config - REPLACE THESE WITH YOUR KEYS
+// Intasend config - REPLACE WITH YOUR KEYS
 const INTASEND_CONFIG = {
   baseUrl: 'https://payment.intasend.com/api/v1',
-  publishableKey: functions.config().intasend?.publishablekey || 'ISPubKey_live_e7ab68f3-0720-4e01-9ddd-4f4d3e014614',
-  secretKey: functions.config().intasend?.secretkey || 'ISSecretKey_live_724d17eb-40a3-4bca-94f9-457004948772',
-  testMode: false // Set to true for testing
+  publishableKey: functions.config().intasend?.publishablekey || 'YOUR_PUBLISHABLE_KEY_HERE',
+  secretKey: functions.config().intasend?.secretkey || 'YOUR_SECRET_KEY_HERE',
+  testMode: true // Set to false when going live
 };
 
 // Create payment request
 router.post('/initialize', async (req, res) => {
   try {
     const { businessId, userId, email, phone, firstName, lastName, plan = 'premium' } = req.body;
+    
+    // Validate required fields
+    if (!email || !phone) {
+      return res.status(400).json({ error: 'Email and phone number are required' });
+    }
     
     // Amount in KES
     const amount = plan === 'premium' ? 1500 : 3000;
@@ -50,10 +55,10 @@ router.post('/initialize', async (req, res) => {
       email: email,
       first_name: firstName || 'Customer',
       last_name: lastName || '',
-      phone_number: phone || '',
+      phone_number: phone,
       host: 'https://findbiz.co.ke',
       api_ref: invoiceRef,
-      redirect_url: `https://findbiz.co.ke/payment/success?ref=${invoiceRef}`,
+      redirect_url: `https://findbiz.co.ke/?ref=${invoiceRef}`,
       comment: `FindBiz ${plan} subscription`
     };
     
