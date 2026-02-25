@@ -35,6 +35,77 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            .detail-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.detail-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.detail-meta span {
+    background: var(--bg);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    color: var(--text-light);
+}
+
+.detail-description {
+    margin: 1rem 0;
+    line-height: 1.8;
+    color: var(--text);
+}
+
+.detail-contact {
+    background: var(--bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+.detail-contact h4 {
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+}
+
+.contact-item a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.contact-item a:hover {
+    text-decoration: underline;
+}
+
+.detail-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.detail-actions .btn {
+    flex: 1;
+    justify-content: center;
+    padding: 1rem;
+    font-size: 1rem;
+}
+            
         }
 
         :root {
@@ -1631,8 +1702,66 @@
 
         // Show business details
         function showDetails(id) {
-            const business = businesses.find(b => b.id === id);
-            showToast(`Loading ${business.name}...`);
+    const business = businesses.find(b => b.id === id);
+    if (!business) return;
+    
+    // Populate modal
+    document.getElementById('detailName').textContent = business.name;
+    
+    const modalBody = document.getElementById('detailBody');
+    modalBody.innerHTML = `
+        <img src="${business.image}" alt="${business.name}" class="detail-image">
+        
+        <div class="detail-meta">
+            <span>${business.categoryDisplay}</span>
+            <span>${business.location}</span>
+            <span>${business.rating}/5 Rating</span>
+            <span>${business.reviews} Reviews</span>
+        </div>
+        
+        <div class="detail-description">
+            ${business.description}
+            <p style="margin-top: 1rem;">
+                Welcome to ${business.name}, your trusted ${business.categoryDisplay.toLowerCase()} in ${business.location}. 
+                We pride ourselves on excellent service and customer satisfaction. 
+                Contact us today to learn more about our offerings.
+            </p>
+        </div>
+        
+        <div class="detail-contact">
+            <h4>Contact Information</h4>
+            <div class="contact-item">
+                <strong>Phone:</strong>
+                <a href="tel:${business.phone}">${business.phone}</a>
+            </div>
+            <div class="contact-item">
+                <strong>Location:</strong>
+                <span>${business.location}</span>
+            </div>
+            <div class="contact-item">
+                <strong>Status:</strong>
+                <span style="color: ${business.verified ? 'var(--success)' : 'var(--text-light)'};">
+                    ${business.verified ? 'Verified Business' : 'Unverified'}
+                </span>
+            </div>
+        </div>
+        
+        <div class="detail-actions">
+            <a href="tel:${business.phone}" class="btn btn-primary">
+                Call Now
+            </a>
+            <button class="btn btn-secondary" onclick="closeModal('detailModal'); openModal('listModal')">
+                List Your Business
+            </button>
+        </div>
+    `;
+    
+    // Track view (optional analytics)
+    console.log(`Viewed business: ${business.name}`);
+    
+    // Open modal
+    openModal('detailModal');
+}
         }
 
         // SEO Optimization
