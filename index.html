@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindBiz Kenya | Discover Local Businesses in Nairobi, Mombasa & Beyond</title>
+    <meta name="description" content="Find trusted local businesses in Kenya. Search restaurants, salons, mechanics, and SMEs in Nairobi, Mombasa, Kisumu. Reviews, contacts & directions.">
+    <meta name="keywords" content="Kenya business directory, Nairobi restaurants, Mombasa hotels, local businesses Kenya, SME directory, Kenyan shops">
+    
+    <!-- Open Graph for Social Sharing -->
+    <meta property="og:title" content="FindBiz Kenya - Local Business Directory">
+    <meta property="og:description" content="Discover the best local businesses across Kenya">
+    <meta property="og:type" content="website">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://findbiz.co.ke">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "FindBiz Kenya",
+        "url": "https://findbiz.co.ke",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://findbiz.co.ke/?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --accent: #FF6F00;
+            --text: #212121;
+            --text-light: #757575;
+            --bg: #FAFAFA;
+            --card-bg: #FFFFFF;
+            --border: #E0E0E0;
+            --success: #4CAF50;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-hover: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: white;
+        }
+
+        .btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #E65100;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 4rem 0 6rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        /* Search Box */
+        .search-container {
+            max-width: 800px;
+            margin: -3rem auto 0;
+            position: relative;
+            z-index: 10;
+            padding: 0 1rem;
+        }
+
+        .search-box {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-hover);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input-group {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .search-input-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .search-input-group input,
+        .search-input-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background: var(--bg);
+        }
+
+        .search-input-group input:focus,
+        .search-input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .search-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            align-self: flex-end;
+        }
+
+        .search-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Categories */
+        .categories {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .category-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .category-count {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        /* Featured Listings */
+        .featured {
+            background: white;
+            padding: 4rem 0;
+        }
+
+        .listings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .business-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .business-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-4px);
+        }
+
+        .business-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .business-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .verified-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--success);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .business-content {
+            padding: 1.5rem;
+        }
+
+        .business-category {
+            color: var(--primary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .business-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .business-location {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .business-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stars {
+            color: #FFC107;
+        }
+
+        .rating-text {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .business-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-outline {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: var(--primary);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 4rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .cta-box {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .cta h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .cta p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .pricing-tag {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text);
+            color: white;
+            padding: 3rem 0 1.5rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 1.5rem;
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.875rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--primary-dark);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-btn {
+                width: 100%;
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .listings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--text);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-hover);
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        @keyframes modalSlide {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .page-btn:hover,
+        .page-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">
+                <div class="logo-icon">📍</div>
+                FindBiz Kenya
+            </a>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+            <div class="nav-links" id="navLinks">
+                <a href="#categories">Categories</a>
+                <a href="#featured">Featured</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#" onclick="openModal('claimModal')">Claim Business</a>
+                <a href="#" class="btn btn-secondary" onclick="openModal('listModal')">+ Add Business</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Discover Kenya's Best Local Businesses</h1>
+            <p>Find trusted restaurants, salons, mechanics, and SMEs in Nairobi, Mombasa, Kisumu, and across Kenya. Verified reviews & instant contact.</p>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <div class="search-container">
+        <div class="search-box">
+            <div class="search-input-group">
+                <label>What are you looking for?</label>
+                <input type="text" id="searchInput" placeholder="e.g., 'nyama choma', 'hair salon', 'mechanic'">
+            </div>
+            <div class="search-input-group">
+                <label>Location</label>
+                <select id="locationSelect">
+                    <option value="">All of Kenya</option>
+                    <option value="nairobi">Nairobi</option>
+                    <option value="mombasa">Mombasa</option>
+                    <option value="kisumu">Kisumu</option>
+                    <option value="nakuru">Nakuru</option>
+                    <option value="eldoret">Eldoret</option>
+                    <option value="thika">Thika</option>
+                </select>
+            </div>
+            <div class="search-input-group">
+                <label>Category</label>
+                <select id="categorySelect">
+                    <option value="">All Categories</option>
+                    <option value="restaurant">Restaurants & Food</option>
+                    <option value="salon">Beauty & Salon</option>
+                    <option value="mechanic">Auto Services</option>
+                    <option value="retail">Retail Shops</option>
+                    <option value="health">Health & Medical</option>
+                    <option value="tech">Tech Services</option>
+                </select>
+            </div>
+            <button class="search-btn" onclick="performSearch()">Search</button>
+        </div>
+    </div>
+
+    <!-- Categories Section -->
+    <section class="categories" id="categories">
+        <div class="container">
+            <div class="section-title">
+                <h2>Browse by Category</h2>
+                <p>Find exactly what you need across popular business categories</p>
+            </div>
+            <div class="category-grid">
+                <div class="category-card" onclick="filterByCategory('restaurant')">
+                    <div class="category-icon">🍽️</div>
+                    <div class="category-name">Restaurants</div>
+                    <div class="category-count">1,240 businesses</div>
+                </div>
+                <div class="category-card" onclick="filterByCategory('salon')">
+                    <div class="category-icon">💇</div>
+                    <div class="category-name">Beauty & Salon</div>
+                    <div class="category-count">856 businesses</div>
+                </div>
+                <div class="category-card" onclick="filterByCategory('mechanic')">
+                    <div class="category-icon">🔧</div>
+                    <div class="category-name">Auto Services</div>
+                    <div class="category-count">634 businesses</div>
+                </div>
+                <div class="category-card" onclick="filterByCategory('retail')">
+                    <div class="category-icon">🛍️</div>
+                    <div class="category-name">Retail Shops</div>
+                    <div class="category-count">2,103 businesses</div>
+                </div>
+                <div class="category-card" onclick="filterByCategory('health')">
+                    <div class="category-icon">🏥</div>
+                    <div class="category-name">Health & Medical</div>
+                    <div class="category-count">445 businesses</div>
+                </div>
+                <div class="category-card" onclick="filterByCategory('tech')">
+                    <div class="category-icon">💻</div>
+                    <div class="category-name">Tech Services</div>
+                    <div class="category-count">328 businesses</div>
+                </div>
+                <div class="category-card" onclick="filterByCategory('education')">
+                    <div class="category-icon">📚</div>
+                    <div class="category-name">Education</div>
+                    <div class="category-count">567 businesses</div>
+                </div>
+                <div class="category-card" onclick="filterByCategory('construction')">
+                    <div class="category-icon">🏗️</div>
+                    <div class="category-name">Construction</div>
+                    <div class="category-count">289 businesses</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Listings -->
+    <section class="featured" id="featured">
+        <div class="container">
+            <div class="section-title">
+                <h2>Featured Businesses</h2>
+                <p>Hand-picked, verified local businesses you can trust</p>
+            </div>
+            <div class="listings-grid" id="listingsGrid">
+                <!-- Listings injected by JavaScript -->
+            </div>
+            <div class="pagination" id="pagination">
+                <button class="page-btn" onclick="changePage(-1)">Previous</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn" onclick="changePage(1)">Next</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">Growing Kenya's Digital Economy</h2>
+            <p style="opacity: 0.9;">Join thousands of businesses already listed</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>5,000+</h3>
+                    <p>Active Listings</p>
+                </div>
+                <div class="stat-item">
+                    <h3>50k+</h3>
+                    <p>Monthly Visitors</p>
+                </div>
+                <div class="stat-item">
+                    <h3>47</h3>
+                    <p>Counties Covered</p>
+                </div>
+                <div class="stat-item">
+                    <h3>98%</h3>
+                    <p>Verified Businesses</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="pricing">
+        <div class="container">
+            <div class="cta-box">
+                <span class="pricing-tag">Limited Time: 50% OFF</span>
+                <h2>List Your Business Today</h2>
+                <p>Get discovered by thousands of potential customers in Kenya. Basic listing is FREE forever. Upgrade to Premium for featured placement and advanced analytics.</p>
+                <div style="margin: 1.5rem 0;">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">KSh 1,500<span style="font-size: 1rem; color: var(--text-light);">/month</span></div>
+                    <div style="text-decoration: line-through; color: var(--text-light);">KSh 3,000/month</div>
+                </div>
+                <button class="btn btn-primary" style="font-size: 1.1rem; padding: 0.75rem 2rem;" onclick="openModal('listModal')">
+                    Get Started Now
+                </button>
+                <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-light);">Free basic listing • Cancel anytime • Instant activation</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>FindBiz Kenya</h4>
+                    <p style="color: rgba(255,255,255,0.8); line-height: 1.6;">Connecting Kenyan consumers with trusted local businesses. Supporting SME growth across all 47 counties.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Popular Cities</h4>
+                    <ul>
+                        <li><a href="#">Nairobi</a></li>
+                        <li><a href="#">Mombasa</a></li>
+                        <li><a href="#">Kisumu</a></li>
+                        <li><a href="#">Nakuru</a></li>
+                        <li><a href="#">Eldoret</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Categories</h4>
+                    <ul>
+                        <li><a href="#">Restaurants</a></li>
+                        <li><a href="#">Beauty & Salon</a></li>
+                        <li><a href="#">Auto Services</a></li>
+                        <li><a href="#">Health & Medical</a></li>
+                        <li><a href="#">Tech Services</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Business Owners</h4>
+                    <ul>
+                        <li><a href="#" onclick="openModal('listModal')">Add Your Business</a></li>
+                        <li><a href="#" onclick="openModal('claimModal')">Claim Listing</a></li>
+                        <li><a href="#">Pricing Plans</a></li>
+                        <li><a href="#">Success Stories</a></li>
+                        <li><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 FindBiz Kenya. All rights reserved. | <a href="#" style="color: rgba(255,255,255,0.6);">Privacy Policy</a> | <a href="#" style="color: rgba(255,255,255,0.6);">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add Business Modal -->
+    <div class="modal" id="listModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Your Business</h3>
+                <button class="close-btn" onclick="closeModal('listModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="businessForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label>Business Name *</label>
+                        <input type="text" required placeholder="e.g., Mama Njoro's Kitchen">
+                    </div>
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select required>
+                            <option value="">Select Category</option>
+                            <option>Restaurants & Food</option>
+                            <option>Beauty & Salon</option>
+                            <option>Auto Services</option>
+                            <option>Retail Shop</option>
+                            <option>Health & Medical</option>
+                            <option>Tech Services</option>
+                            <option>Education</option>
+                            <option>Construction</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Location/City *</label>
+                        <select required>
+                            <option value="">Select City</option>
+                            <option>Nairobi</option>
+                            <option>Mombasa</option>
+                            <option>Kisumu</option>
+                            <option>Nakuru</option>
+                            <option>Eldoret</option>
+                            <option>Thika</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" required placeholder="e.g., 0712 345 678">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" placeholder="business@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Business Description</label>
+                        <textarea placeholder="Tell us about your business..."></textarea>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms" style="margin: 0; font-weight: normal;">I agree to the terms and confirm this is my business</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; justify-content: center;">
+                        Submit for Review
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Claim Business Modal -->
+    <div class="modal" id="claimModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Claim Your Business</h3>
+                <button class="close-btn" onclick="closeModal('claimModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 1rem; color: var(--text-light);">Enter your business details to verify ownership and gain control of your listing.</p>
+                <form onsubmit="handleClaim(event)">
+                    <div class="form-group">
+                        <label>Business Name</label>
+                        <input type="text" required placeholder="Search for your business">
+                    </div>
+                    <div class="form-group">
+                        <label>Your Name</label>
+                        <input type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Business Registration Number</label>
+                        <input type="text" placeholder="Optional - speeds up verification">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                        Verify Ownership
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span id="toastIcon">✓</span>
+        <span id="toastMessage">Success!</span>
+    </div>
+
+    <script>
+        // Sample business data - In production, this comes from your backend
+        const businesses = [
+            {
+                id: 1,
+                name: "Kilimanjaro Bistro",
+                category: "restaurant",
+                categoryDisplay: "Restaurants & Food",
+                location: "Westlands, Nairobi",
+                rating: 4.8,
+                reviews: 124,
+                image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop",
+                verified: true,
+                featured: true,
+                phone: "+254 712 345 678",
+                description: "Authentic East African cuisine with modern twist"
+            },
+            {
+                id: 2,
+                name: "Nairobi Auto Care",
+                category: "mechanic",
+                categoryDisplay: "Auto Services",
+                location: "Industrial Area, Nairobi",
+                rating: 4.6,
+                reviews: 89,
+                image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400&h=300&fit=crop",
+                verified: true,
+                featured: true,
+                phone: "+254 723 456 789",
+                description: "Full-service auto repair and maintenance"
+            },
+            {
+                id: 3,
+                name: "Swahili Beauty Palace",
+                category: "salon",
+                categoryDisplay: "Beauty & Salon",
+                location: "Mombasa CBD",
+                rating: 4.9,
+                reviews: 215,
+                image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop",
+                verified: true,
+                featured: true,
+                phone: "+254 734 567 890",
+                description: "Premium beauty services and bridal makeup"
+            },
+            {
+                id: 4,
+                name: "TechFix Solutions",
+                category: "tech",
+                categoryDisplay: "Tech Services",
+                location: "Upper Hill, Nairobi",
+                rating: 4.7,
+                reviews: 67,
+                image: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=300&fit=crop",
+                verified: true,
+                featured: false,
+                phone: "+254 745 678 901",
+                description: "Computer repair, networking, and IT support"
+            },
+            {
+                id: 5,
+                name: "Lakeview Pharmacy",
+                category: "health",
+                categoryDisplay: "Health & Medical",
+                location: "Kisumu",
+                rating: 4.5,
+                reviews: 156,
+                image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400&h=300&fit=crop",
+                verified: true,
+                featured: false,
+                phone: "+254 756 789 012",
+                description: "24/7 pharmacy and medical consultation"
+            },
+            {
+                id: 6,
+                name: "Mama Africa Crafts",
+                category: "retail",
+                categoryDisplay: "Retail Shops",
+                location: "Maasai Market, Nairobi",
+                rating: 4.8,
+                reviews: 342,
+                image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop",
+                verified: true,
+                featured: true,
+                phone: "+254 767 890 123",
+                description: "Authentic African crafts and souvenirs"
+            }
+        ];
+
+        let currentPage = 1;
+        const itemsPerPage = 6;
+        let filteredBusinesses = [...businesses];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderListings();
+            updateSEO();
+        });
+
+        // Render business listings
+        function renderListings() {
+            const grid = document.getElementById('listingsGrid');
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageItems = filteredBusinesses.slice(start, end);
+
+            grid.innerHTML = pageItems.map(business => `
+                <article class="business-card" itemscope itemtype="https://schema.org/LocalBusiness">
+                    <div class="business-image">
+                        <img src="${business.image}" alt="${business.name}" loading="lazy" itemprop="image">
+                        ${business.featured ? '<span class="featured-badge">Featured</span>' : ''}
+                        ${business.verified ? `
+                            <span class="verified-badge">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Verified
+                            </span>
+                        ` : ''}
+                    </div>
+                    <div class="business-content">
+                        <div class="business-category" itemprop="category">${business.categoryDisplay}</div>
+                        <h3 class="business-name" itemprop="name">${business.name}</h3>
+                        <div class="business-location" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+                            <span>📍</span>
+                            <span itemprop="addressLocality">${business.location}</span>
+                        </div>
+                        <div class="business-rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+                            <span class="stars">${'★'.repeat(Math.floor(business.rating))}${'☆'.repeat(5-Math.floor(business.rating))}</span>
+                            <span class="rating-text">
+                                <span itemprop="ratingValue">${business.rating}</span>/5 
+                                (<span itemprop="reviewCount">${business.reviews}</span> reviews)
+                            </span>
+                        </div>
+                        <div class="business-actions">
+                            <a href="tel:${business.phone}" class="btn-small btn-outline" itemprop="telephone">Call Now</a>
+                            <button class="btn-small btn-primary" onclick="showDetails(${business.id})">View Details</button>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+
+            updatePagination();
+        }
+
+        // Update pagination
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredBusinesses.length / itemsPerPage);
+            const pagination = document.getElementById('pagination');
+            
+            let html = `
+                <button class="page-btn" onclick="changePage(-1)" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+            `;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+            }
+            
+            html += `
+                <button class="page-btn" onclick="changePage(1)" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+            `;
+            
+            pagination.innerHTML = html;
+        }
+
+        function changePage(direction) {
+            currentPage += direction;
+            renderListings();
+            document.getElementById('featured').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderListings();
+        }
+
+        // Search functionality
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const location = document.getElementById('locationSelect').value;
+            const category = document.getElementById('categorySelect').value;
+
+            filteredBusinesses = businesses.filter(b => {
+                const matchesSearch = !searchTerm || 
+                    b.name.toLowerCase().includes(searchTerm) || 
+                    b.description.toLowerCase().includes(searchTerm);
+                const matchesLocation = !location || b.location.toLowerCase().includes(location);
+                const matchesCategory = !category || b.category === category;
+                
+                return matchesSearch && matchesLocation && matchesCategory;
+            });
+
+            currentPage = 1;
+            renderListings();
+            
+            // Update URL for SEO
+            const params = new URLSearchParams();
+            if (searchTerm) params.set('search', searchTerm);
+            if (location) params.set('location', location);
+            if (category) params.set('category', category);
+            
+            window.history.pushState({}, '', `${window.location.pathname}?${params}`);
+            
+            showToast(`Found ${filteredBusinesses.length} businesses`);
+        }
+
+        function filterByCategory(category) {
+            document.getElementById('categorySelect').value = category;
+            performSearch();
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Form handlers
+        function handleSubmit(event) {
+            event.preventDefault();
+            closeModal('listModal');
+            showToast('Business submitted for review! We\'ll contact you within 24 hours.');
+            // In production: Send to backend API
+        }
+
+        function handleClaim(event) {
+            event.preventDefault();
+            closeModal('claimModal');
+            showToast('Claim request received. Verification email sent.');
+            // In production: Send to backend API
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Mobile menu
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        // Show business details (placeholder for detail page)
+        function showDetails(id) {
+            const business = businesses.find(b => b.id === id);
+            showToast(`Loading ${business.name}...`);
+            // In production: Navigate to detail page
+        }
+
+        // SEO Optimization
+        function updateSEO() {
+            // Dynamic meta description based on content
+            const categories = [...new Set(businesses.map(b => b.categoryDisplay))].join(', ');
+            const cities = [...new Set(businesses.map(b => b.location.split(',')[0]))].join(', ');
+            
+            document.querySelector('meta[name="description"]').content = 
+                `Find ${businesses.length}+ verified local businesses in Kenya. Browse ${categories} in ${cities}. Read reviews, get directions, and contact businesses directly.`;
+        }
+
+        // Handle browser back/forward
+        window.addEventListener('popstate', () => {
+            const params = new URLSearchParams(window.location.search);
+            document.getElementById('searchInput').value = params.get('search') || '';
+            document.getElementById('locationSelect').value = params.get('location') || '';
+            document.getElementById('categorySelect').value = params.get('category') || '';
+            performSearch();
+        });
+
+        // Intersection Observer for lazy loading animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe cards after render
+        setTimeout(() => {
+            document.querySelectorAll('.business-card, .category-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        }, 100);
+    </script>
+</body>
+</html>
