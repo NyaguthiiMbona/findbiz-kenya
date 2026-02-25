@@ -3,161 +3,146 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { Router } from 'express';
 import * as axios from 'axios';
-import * as crypto from 'crypto';
 
 const router = Router();
 const db = admin.firestore();
 
-// M-Pesa Daraja API config
-const MPESA_CONFIG = {
-  baseUrl: 'https://sandbox.safaricom.co.ke', // Change to live for production
-  consumerKey: functions.config().mpesa.consumerkey,
-  consumerSecret: functions.config().mpesa.consumersecret,
-  passkey: functions.config().mpesa.passkey,
-  shortcode: '174379', // Test shortcode
-  callbackUrl: 'https://us-central1-findbiz-kenya.cloudfunctions.net/api/payments/callback'
+// Intasend config - REPLACE THESE WITH YOUR KEYS
+const INTASEND_CONFIG = {
+  baseUrl: 'https://payment.intasend.com/api/v1',
+  publishableKey: functions.config().intasend?.publishablekey || 'ISPubKey_live_e7ab68f3-0720-4e01-9ddd-4f4d3e014614',
+  secretKey: functions.config().intasend?.secretkey || 'ISSecretKey_live_724d17eb-40a3-4bca-94f9-457004948772',
+  testMode: false // Set to true for testing
 };
 
-// Get M-Pesa access token
-async function getAccessToken(): Promise<string> {
-  const auth = Buffer.from(`${MPESA_CONFIG.consumerKey}:${MPESA_CONFIG.consumerSecret}`).toString('base64');
-  
-  const response = await axios.default.get(
-    `${MPESA_CONFIG.baseUrl}/oauth/v1/generate?grant_type=client_credentials`,
-    {
-      headers: { Authorization: `Basic ${auth}` }
-    }
-  );
-  
-  return response.data.access_token;
-}
-
-// Initiate STK Push (Paybill)
-router.post('/stkpush', async (req, res) => {
+// Create payment request
+router.post('/initialize', async (req, res) => {
   try {
-    const { phone, amount, businessId, userId, plan = 'premium' } = req.body;
+    const { businessId, userId, email, phone, firstName, lastName, plan = 'premium' } = req.body;
     
-    // Validate phone ( Kenyan format)
-    const cleanPhone = phone.replace(/\D/g, '');
-    const formattedPhone = cleanPhone.startsWith('0') 
-      ? '254' + cleanPhone.substring(1) 
-      : cleanPhone;
+    // Amount in KES
+    const amount = plan === 'premium' ? 1500 : 3000;
+    const currency = 'KES';
     
-    if (!formattedPhone.match(/^2547\d{8}$/)) {
-      return res.status(400).json({ error: 'Invalid phone number. Use format: 0712345678' });
-    }
+    // Create payment record
+    const paymentRef = db.collection('payments').doc();
+    const invoiceRef = `FBZ-${Date.now()}-${paymentRef.id.substring(0, 6)}`;
     
-    const token = await getAccessToken();
-    const timestamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, -3);
-    const password = Buffer.from(
-      `${MPESA_CONFIG.shortcode}${MPESA_CONFIG.passkey}${timestamp}`
-    ).toString('base64');
-    
-    const checkoutRequestId = crypto.randomUUID();
-    
-    // Save pending payment
-    await db.collection('payments').doc(checkoutRequestId).set({
+    await paymentRef.set({
       businessId,
       userId,
-      phone: formattedPhone,
-      amount: parseInt(amount),
+      invoiceRef,
+      amount,
+      currency,
       plan,
       status: 'pending',
-      checkoutRequestId,
-      merchantRequestId: null,
+      provider: 'intasend',
+      customerEmail: email,
+      customerPhone: phone,
+      customerName: `${firstName} ${lastName}`,
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
     
+    // Create Intasend payment
     const payload = {
-      BusinessShortCode: MPESA_CONFIG.shortcode,
-      Password: password,
-      Timestamp: timestamp,
-      TransactionType: 'CustomerPayBillOnline',
-      Amount: amount,
-      PartyA: formattedPhone,
-      PartyB: MPESA_CONFIG.shortcode,
-      PhoneNumber: formattedPhone,
-      CallBackURL: `${MPESA_CONFIG.callbackUrl}?id=${checkoutRequestId}`,
-      AccountReference: `FindBiz-${businessId.substring(0, 8)}`,
-      TransactionDesc: `Subscription: ${plan}`
+      amount: amount,
+      currency: currency,
+      email: email,
+      first_name: firstName || 'Customer',
+      last_name: lastName || '',
+      phone_number: phone || '',
+      host: 'https://findbiz.co.ke',
+      api_ref: invoiceRef,
+      redirect_url: `https://findbiz.co.ke/payment/success?ref=${invoiceRef}`,
+      comment: `FindBiz ${plan} subscription`
     };
     
     const response = await axios.default.post(
-      `${MPESA_CONFIG.baseUrl}/mpesa/stkpush/v1/processrequest`,
+      `${INTASEND_CONFIG.baseUrl}/payment/checkout/`,
       payload,
       {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: {
+          'Authorization': `Bearer ${INTASEND_CONFIG.secretKey}`,
+          'Content-Type': 'application/json'
+        }
       }
     );
     
-    // Update with M-Pesa request ID
-    await db.collection('payments').doc(checkoutRequestId).update({
-      merchantRequestId: response.data.MerchantRequestID,
-      mpesaResponse: response.data
+    // Update with Intasend tracking ID
+    await paymentRef.update({
+      intasendId: response.data.id,
+      checkoutUrl: response.data.url
     });
     
     res.json({
       success: true,
-      checkoutRequestId,
-      message: 'Payment request sent. Check your phone to complete M-Pesa payment.',
-      response: response.data
+      paymentId: paymentRef.id,
+      invoiceRef: invoiceRef,
+      checkoutUrl: response.data.url,
+      message: 'Redirect to Intasend checkout'
     });
     
   } catch (error) {
-    console.error('STK Push error:', error);
+    console.error('Intasend init error:', error.response?.data || error.message);
     res.status(500).json({ 
-      error: 'Payment initiation failed',
-      details: error.message 
+      error: 'Payment initialization failed',
+      details: error.response?.data?.detail || error.message
     });
   }
 });
 
-// M-Pesa Callback (Async)
-router.post('/callback', async (req, res) => {
+// Webhook - Intasend sends payment updates here
+router.post('/webhook', async (req, res) => {
   try {
-    const { id } = req.query;
-    const callbackData = req.body.Body.stkCallback;
+    const event = req.body;
+    console.log('Intasend webhook:', JSON.stringify(event));
     
-    console.log('M-Pesa Callback:', JSON.stringify(callbackData));
-    
-    const paymentRef = db.collection('payments').doc(id as string);
-    const payment = await paymentRef.get();
-    
-    if (!payment.exists) {
-      console.error('Payment not found:', id);
-      return res.sendStatus(200); // Acknowledge receipt
-    }
-    
-    const paymentData = payment.data();
-    
-    if (callbackData.ResultCode === 0) {
-      // Success
-      const metadata = callbackData.CallbackMetadata.Item;
-      const mpesaReceipt = metadata.find((i: any) => i.Name === 'MpesaReceiptNumber')?.Value;
-      const transactionDate = metadata.find((i: any) => i.Name === 'TransactionDate')?.Value;
-      const phone = metadata.find((i: any) => i.Name === 'PhoneNumber')?.Value;
+    // Verify it's a completed payment
+    if (event.state === 'COMPLETE' && event.status === 'SUCCESSFUL') {
+      const invoiceRef = event.api_ref;
+      const transactionId = event.invoice_id;
+      const amount = event.net_amount || event.amount;
       
-      // Update payment record
-      await paymentRef.update({
+      // Find payment record
+      const paymentQuery = await db.collection('payments')
+        .where('invoiceRef', '==', invoiceRef)
+        .limit(1)
+        .get();
+      
+      if (paymentQuery.empty) {
+        console.error('Payment not found:', invoiceRef);
+        return res.sendStatus(200);
+      }
+      
+      const paymentDoc = paymentQuery.docs[0];
+      const paymentData = paymentDoc.data();
+      
+      // Update payment as completed
+      await paymentDoc.ref.update({
         status: 'completed',
-        mpesaReceipt,
-        transactionDate: transactionDate?.toString(),
-        phone,
-        completedAt: admin.firestore.FieldValue.serverTimestamp(),
-        rawCallback: callbackData
+        transactionId: transactionId,
+        paidAt: admin.firestore.FieldValue.serverTimestamp(),
+        rawWebhook: event,
+        fees: event.charges || 0,
+        netAmount: amount
       });
       
       // Activate subscription
       const expiresAt = new Date();
-      expiresAt.setMonth(expiresAt.getMonth() + 1); // 1 month subscription
+      if (paymentData.plan === 'annual') {
+        expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+      } else {
+        expiresAt.setMonth(expiresAt.getMonth() + 1);
+      }
       
       await db.collection('businesses').doc(paymentData.businessId).update({
         'subscription.status': 'active',
         'subscription.plan': paymentData.plan,
+        'subscription.paymentId': paymentDoc.id,
         'subscription.startedAt': admin.firestore.FieldValue.serverTimestamp(),
         'subscription.expiresAt': expiresAt,
-        'subscription.paymentId': id,
         'isFeatured': true,
+        'isVerified': true,
         'updatedAt': admin.firestore.FieldValue.serverTimestamp()
       });
       
@@ -166,42 +151,58 @@ router.post('/callback', async (req, res) => {
         type: 'payment_success',
         userId: paymentData.userId,
         businessId: paymentData.businessId,
-        amount: paymentData.amount,
+        amount: amount,
+        plan: paymentData.plan,
         read: false,
         createdAt: admin.firestore.FieldValue.serverTimestamp()
       });
       
-    } else {
-      // Failed
-      await paymentRef.update({
-        status: 'failed',
-        resultCode: callbackData.ResultCode,
-        resultDesc: callbackData.ResultDesc,
-        failedAt: admin.firestore.FieldValue.serverTimestamp()
-      });
+      console.log(`Payment successful: ${invoiceRef}, Business: ${paymentData.businessId}`);
     }
     
-    res.sendStatus(200); // Must return 200 to M-Pesa
+    // Handle failed/cancelled payments
+    if (event.state === 'FAILED' || event.status === 'FAILED') {
+      const invoiceRef = event.api_ref;
+      
+      const paymentQuery = await db.collection('payments')
+        .where('invoiceRef', '==', invoiceRef)
+        .limit(1)
+        .get();
+      
+      if (!paymentQuery.empty) {
+        await paymentQuery.docs[0].ref.update({
+          status: 'failed',
+          failureReason: event.failed_reason || event.state,
+          failedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+      }
+    }
+    
+    res.sendStatus(200);
     
   } catch (error) {
-    console.error('Callback processing error:', error);
-    res.sendStatus(200); // Still acknowledge to prevent retries
+    console.error('Webhook error:', error);
+    res.sendStatus(200);
   }
 });
 
-// Check payment status
-router.get('/status/:id', async (req, res) => {
+// Check payment status manually
+router.get('/status/:invoiceRef', async (req, res) => {
   try {
-    const { id } = req.params;
-    const payment = await db.collection('payments').doc(id).get();
+    const { invoiceRef } = req.params;
     
-    if (!payment.exists) {
+    const payment = await db.collection('payments')
+      .where('invoiceRef', '==', invoiceRef)
+      .limit(1)
+      .get();
+    
+    if (payment.empty) {
       return res.status(404).json({ error: 'Payment not found' });
     }
     
     res.json({
-      id: payment.id,
-      ...payment.data()
+      id: payment.docs[0].id,
+      ...payment.docs[0].data()
     });
     
   } catch (error) {
@@ -209,7 +210,7 @@ router.get('/status/:id', async (req, res) => {
   }
 });
 
-// Get payment history for business
+// Get payment history
 router.get('/history/:businessId', async (req, res) => {
   try {
     const { businessId } = req.params;
