@@ -100,6 +100,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
+            font-weight: bold;
         }
 
         .nav-links {
@@ -304,8 +305,17 @@
         }
 
         .category-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 0.5rem;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
         }
 
         .category-name {
@@ -375,6 +385,11 @@
             gap: 0.25rem;
         }
 
+        .verified-badge::before {
+            content: "✓";
+            font-weight: bold;
+        }
+
         .featured-badge {
             position: absolute;
             top: 1rem;
@@ -416,6 +431,14 @@
             gap: 0.5rem;
         }
 
+        .location-icon {
+            width: 16px;
+            height: 16px;
+            background: var(--text-light);
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'%3E%3C/path%3E%3Ccircle cx='12' cy='10' r='3'%3E%3C/circle%3E%3C/svg%3E") no-repeat center;
+            mask-size: contain;
+        }
+
         .business-rating {
             display: flex;
             align-items: center;
@@ -425,6 +448,7 @@
 
         .stars {
             color: #FFC107;
+            font-size: 1.1rem;
         }
 
         .rating-text {
@@ -576,6 +600,7 @@
             color: white;
             font-size: 1.5rem;
             cursor: pointer;
+            font-weight: bold;
         }
 
         /* Responsive */
@@ -669,6 +694,18 @@
             display: flex;
         }
 
+        .toast-icon {
+            width: 20px;
+            height: 20px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+
         /* Modal */
         .modal {
             display: none;
@@ -727,6 +764,12 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: var(--text-light);
+            font-weight: bold;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-body {
@@ -806,6 +849,45 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
+
+        /* Payment Modal */
+        .payment-options {
+            display: grid;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .payment-option {
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .payment-option:hover,
+        .payment-option.selected {
+            border-color: var(--primary);
+            background: rgba(46, 125, 50, 0.05);
+        }
+
+        .payment-option input {
+            width: auto;
+        }
+
+        .payment-label {
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .payment-price {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
     </style>
 </head>
 <body>
@@ -814,7 +896,7 @@
     <header>
         <nav class="container">
             <a href="#" class="logo">
-                <div class="logo-icon">📍</div>
+                <div class="logo-icon">FB</div>
                 FindBiz Kenya
             </a>
             <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
@@ -832,7 +914,7 @@
     <section class="hero">
         <div class="container">
             <h1>Discover Kenya's Best Local Businesses</h1>
-            <p>Find trusted restaurants, salons, mechanics, and SMEs in Nairobi, Mombasa, Kisumu, and across Kenya. Verified reviews & instant contact.</p>
+            <p>Find trusted restaurants, salons, mechanics, and SMEs in Nairobi, Mombasa, Kisumu, and across Kenya. Verified reviews and instant contact.</p>
         </div>
     </section>
 
@@ -880,42 +962,42 @@
             </div>
             <div class="category-grid">
                 <div class="category-card" onclick="filterByCategory('restaurant')">
-                    <div class="category-icon">🍽️</div>
+                    <div class="category-icon">R</div>
                     <div class="category-name">Restaurants</div>
                     <div class="category-count">1,240 businesses</div>
                 </div>
                 <div class="category-card" onclick="filterByCategory('salon')">
-                    <div class="category-icon">💇</div>
+                    <div class="category-icon">B</div>
                     <div class="category-name">Beauty & Salon</div>
                     <div class="category-count">856 businesses</div>
                 </div>
                 <div class="category-card" onclick="filterByCategory('mechanic')">
-                    <div class="category-icon">🔧</div>
+                    <div class="category-icon">A</div>
                     <div class="category-name">Auto Services</div>
                     <div class="category-count">634 businesses</div>
                 </div>
                 <div class="category-card" onclick="filterByCategory('retail')">
-                    <div class="category-icon">🛍️</div>
+                    <div class="category-icon">S</div>
                     <div class="category-name">Retail Shops</div>
                     <div class="category-count">2,103 businesses</div>
                 </div>
                 <div class="category-card" onclick="filterByCategory('health')">
-                    <div class="category-icon">🏥</div>
+                    <div class="category-icon">H</div>
                     <div class="category-name">Health & Medical</div>
                     <div class="category-count">445 businesses</div>
                 </div>
                 <div class="category-card" onclick="filterByCategory('tech')">
-                    <div class="category-icon">💻</div>
+                    <div class="category-icon">T</div>
                     <div class="category-name">Tech Services</div>
                     <div class="category-count">328 businesses</div>
                 </div>
                 <div class="category-card" onclick="filterByCategory('education')">
-                    <div class="category-icon">📚</div>
+                    <div class="category-icon">E</div>
                     <div class="category-name">Education</div>
                     <div class="category-count">567 businesses</div>
                 </div>
                 <div class="category-card" onclick="filterByCategory('construction')">
-                    <div class="category-icon">🏗️</div>
+                    <div class="category-icon">C</div>
                     <div class="category-name">Construction</div>
                     <div class="category-count">289 businesses</div>
                 </div>
@@ -978,10 +1060,10 @@
                     <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">KSh 1,500<span style="font-size: 1rem; color: var(--text-light);">/month</span></div>
                     <div style="text-decoration: line-through; color: var(--text-light);">KSh 3,000/month</div>
                 </div>
-                <button class="btn btn-primary" style="font-size: 1.1rem; padding: 0.75rem 2rem;" onclick="openModal('listModal')">
+                <button class="btn btn-primary" style="font-size: 1.1rem; padding: 0.75rem 2rem;" onclick="openPaymentModal()">
                     Get Started Now
                 </button>
-                <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-light);">Free basic listing • Cancel anytime • Instant activation</p>
+                <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-light);">Free basic listing - Cancel anytime - Instant activation</p>
             </div>
         </div>
     </section>
@@ -1036,53 +1118,53 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Add Your Business</h3>
-                <button class="close-btn" onclick="closeModal('listModal')">&times;</button>
+                <button class="close-btn" onclick="closeModal('listModal')">×</button>
             </div>
             <div class="modal-body">
                 <form id="businessForm" onsubmit="handleSubmit(event)">
                     <div class="form-group">
                         <label>Business Name *</label>
-                        <input type="text" required placeholder="e.g., Mama Njoro's Kitchen">
+                        <input type="text" id="businessName" required placeholder="e.g., Mama Njoro's Kitchen">
                     </div>
                     <div class="form-group">
                         <label>Category *</label>
-                        <select required>
+                        <select id="businessCategory" required>
                             <option value="">Select Category</option>
-                            <option>Restaurants & Food</option>
-                            <option>Beauty & Salon</option>
-                            <option>Auto Services</option>
-                            <option>Retail Shop</option>
-                            <option>Health & Medical</option>
-                            <option>Tech Services</option>
-                            <option>Education</option>
-                            <option>Construction</option>
-                            <option>Other</option>
+                            <option value="Restaurants & Food">Restaurants & Food</option>
+                            <option value="Beauty & Salon">Beauty & Salon</option>
+                            <option value="Auto Services">Auto Services</option>
+                            <option value="Retail Shop">Retail Shop</option>
+                            <option value="Health & Medical">Health & Medical</option>
+                            <option value="Tech Services">Tech Services</option>
+                            <option value="Education">Education</option>
+                            <option value="Construction">Construction</option>
+                            <option value="Other">Other</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Location/City *</label>
-                        <select required>
+                        <select id="businessCity" required>
                             <option value="">Select City</option>
-                            <option>Nairobi</option>
-                            <option>Mombasa</option>
-                            <option>Kisumu</option>
-                            <option>Nakuru</option>
-                            <option>Eldoret</option>
-                            <option>Thika</option>
-                            <option>Other</option>
+                            <option value="Nairobi">Nairobi</option>
+                            <option value="Mombasa">Mombasa</option>
+                            <option value="Kisumu">Kisumu</option>
+                            <option value="Nakuru">Nakuru</option>
+                            <option value="Eldoret">Eldoret</option>
+                            <option value="Thika">Thika</option>
+                            <option value="Other">Other</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Phone Number *</label>
-                        <input type="tel" required placeholder="e.g., 0712 345 678">
+                        <input type="tel" id="businessPhone" required placeholder="e.g., 0712 345 678">
                     </div>
                     <div class="form-group">
                         <label>Email Address</label>
-                        <input type="email" placeholder="business@example.com">
+                        <input type="email" id="businessEmail" placeholder="business@example.com">
                     </div>
                     <div class="form-group">
                         <label>Business Description</label>
-                        <textarea placeholder="Tell us about your business..."></textarea>
+                        <textarea id="businessDescription" placeholder="Tell us about your business..."></textarea>
                     </div>
                     <div class="checkbox-group">
                         <input type="checkbox" id="terms" required>
@@ -1101,7 +1183,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Claim Your Business</h3>
-                <button class="close-btn" onclick="closeModal('claimModal')">&times;</button>
+                <button class="close-btn" onclick="closeModal('claimModal')">×</button>
             </div>
             <div class="modal-body">
                 <p style="margin-bottom: 1rem; color: var(--text-light);">Enter your business details to verify ownership and gain control of your listing.</p>
@@ -1126,14 +1208,73 @@
         </div>
     </div>
 
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Upgrade to Premium</h3>
+                <button class="close-btn" onclick="closeModal('paymentModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 1rem; color: var(--text-light);">Choose your plan to get featured placement and more visibility.</p>
+                
+                <div class="payment-options">
+                    <div class="payment-option selected" onclick="selectPlan('premium')">
+                        <input type="radio" name="plan" value="premium" checked>
+                        <div class="payment-label">
+                            <strong>Monthly Premium</strong><br>
+                            <small>Featured listing, analytics, priority support</small>
+                        </div>
+                        <div class="payment-price">KSh 1,500</div>
+                    </div>
+                    
+                    <div class="payment-option" onclick="selectPlan('annual')">
+                        <input type="radio" name="plan" value="annual">
+                        <div class="payment-label">
+                            <strong>Annual Premium</strong><br>
+                            <small>Save 20% - All premium features</small>
+                        </div>
+                        <div class="payment-price">KSh 3,000</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="paymentName" placeholder="Full name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="paymentEmail" placeholder="email@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label>Phone Number (M-Pesa)</label>
+                    <input type="tel" id="paymentPhone" placeholder="0712 345 678">
+                </div>
+
+                <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="processPayment()">
+                    Pay Now
+                </button>
+                
+                <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-light); text-align: center;">
+                    Secured by Intasend. You will receive an M-Pesa prompt on your phone.
+                </p>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div class="toast" id="toast">
-        <span id="toastIcon">✓</span>
+        <div class="toast-icon">✓</div>
         <span id="toastMessage">Success!</span>
     </div>
 
     <script>
-        // Sample business data - In production, this comes from your backend
+        // API Configuration
+        const API_BASE = 'https://us-central1-findbiz-kenya.cloudfunctions.net/api';
+        
+        // Sample business data
         const businesses = [
             {
                 id: 1,
@@ -1224,11 +1365,13 @@
         let currentPage = 1;
         const itemsPerPage = 6;
         let filteredBusinesses = [...businesses];
+        let selectedPlan = 'premium';
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             renderListings();
             updateSEO();
+            handlePaymentReturn();
         });
 
         // Render business listings
@@ -1243,20 +1386,13 @@
                     <div class="business-image">
                         <img src="${business.image}" alt="${business.name}" loading="lazy" itemprop="image">
                         ${business.featured ? '<span class="featured-badge">Featured</span>' : ''}
-                        ${business.verified ? `
-                            <span class="verified-badge">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                Verified
-                            </span>
-                        ` : ''}
+                        ${business.verified ? '<span class="verified-badge">Verified</span>' : ''}
                     </div>
                     <div class="business-content">
                         <div class="business-category" itemprop="category">${business.categoryDisplay}</div>
                         <h3 class="business-name" itemprop="name">${business.name}</h3>
                         <div class="business-location" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-                            <span>📍</span>
+                            <div class="location-icon"></div>
                             <span itemprop="addressLocality">${business.location}</span>
                         </div>
                         <div class="business-rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
@@ -1327,7 +1463,6 @@
             currentPage = 1;
             renderListings();
             
-            // Update URL for SEO
             const params = new URLSearchParams();
             if (searchTerm) params.set('search', searchTerm);
             if (location) params.set('location', location);
@@ -1354,6 +1489,10 @@
             document.body.style.overflow = '';
         }
 
+        function openPaymentModal() {
+            openModal('paymentModal');
+        }
+
         // Close modal on outside click
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
@@ -1365,16 +1504,116 @@
         // Form handlers
         function handleSubmit(event) {
             event.preventDefault();
-            closeModal('listModal');
-            showToast('Business submitted for review! We\'ll contact you within 24 hours.');
-            // In production: Send to backend API
+            
+            const businessData = {
+                name: document.getElementById('businessName').value,
+                category: document.getElementById('businessCategory').value,
+                location: {
+                    city: document.getElementById('businessCity').value
+                },
+                contact: {
+                    phone: document.getElementById('businessPhone').value,
+                    email: document.getElementById('businessEmail').value
+                },
+                description: document.getElementById('businessDescription').value,
+                ownerId: 'anonymous-user'
+            };
+            
+            // Send to backend
+            fetch(`${API_BASE}/businesses`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(businessData)
+            })
+            .then(res => res.json())
+            .then(data => {
+                closeModal('listModal');
+                showToast('Business submitted for review! We will contact you within 24 hours.');
+                document.getElementById('businessForm').reset();
+            })
+            .catch(err => {
+                showToast('Error submitting. Please try again.');
+                console.error(err);
+            });
         }
 
         function handleClaim(event) {
             event.preventDefault();
             closeModal('claimModal');
             showToast('Claim request received. Verification email sent.');
-            // In production: Send to backend API
+        }
+
+        // Payment functions
+        function selectPlan(plan) {
+            selectedPlan = plan;
+            document.querySelectorAll('.payment-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            event.currentTarget.querySelector('input').checked = true;
+        }
+
+        async function processPayment() {
+            const name = document.getElementById('paymentName').value;
+            const email = document.getElementById('paymentEmail').value;
+            const phone = document.getElementById('paymentPhone').value;
+            
+            if (!name || !email || !phone) {
+                showToast('Please fill in all fields');
+                return;
+            }
+            
+            const nameParts = name.split(' ');
+            
+            try {
+                const response = await fetch(`${API_BASE}/payments/initialize`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        businessId: 'pending-business',
+                        userId: 'anonymous-user',
+                        email: email,
+                        phone: phone,
+                        firstName: nameParts[0],
+                        lastName: nameParts.slice(1).join(' ') || '',
+                        plan: selectedPlan
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Redirect to Intasend checkout
+                    window.location.href = data.checkoutUrl;
+                } else {
+                    showToast('Payment failed: ' + data.error);
+                }
+                
+            } catch (error) {
+                showToast('Network error. Please try again.');
+                console.error(error);
+            }
+        }
+
+        // Handle payment return
+        function handlePaymentReturn() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const ref = urlParams.get('ref');
+            
+            if (ref) {
+                fetch(`${API_BASE}/payments/status/${ref}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'completed') {
+                            showToast('Payment successful! Your listing is now featured.');
+                        } else if (data.status === 'pending') {
+                            showToast('Payment processing. Please wait...');
+                        } else {
+                            showToast('Payment failed. Please try again.');
+                        }
+                    })
+                    .catch(err => console.error(err));
+            }
         }
 
         // Toast notification
@@ -1390,16 +1629,14 @@
             document.getElementById('navLinks').classList.toggle('active');
         }
 
-        // Show business details (placeholder for detail page)
+        // Show business details
         function showDetails(id) {
             const business = businesses.find(b => b.id === id);
             showToast(`Loading ${business.name}...`);
-            // In production: Navigate to detail page
         }
 
         // SEO Optimization
         function updateSEO() {
-            // Dynamic meta description based on content
             const categories = [...new Set(businesses.map(b => b.categoryDisplay))].join(', ');
             const cities = [...new Set(businesses.map(b => b.location.split(',')[0]))].join(', ');
             
@@ -1416,7 +1653,7 @@
             performSearch();
         });
 
-        // Intersection Observer for lazy loading animations
+        // Intersection Observer for animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -1431,7 +1668,6 @@
             });
         }, observerOptions);
 
-        // Observe cards after render
         setTimeout(() => {
             document.querySelectorAll('.business-card, .category-card').forEach(card => {
                 card.style.opacity = '0';
