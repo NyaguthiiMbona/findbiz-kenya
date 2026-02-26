@@ -1759,63 +1759,70 @@
     // Track view (optional analytics)
     console.log(`Viewed business: ${business.name}`);
     
-    // Open modal
+        // Open modal
     openModal('detailModal');
-        }
-        // SEO Optimization
-        function updateSEO() {
-            const categories = [...new Set(businesses.map(b => b.categoryDisplay))].join(', ');
-            const cities = [...new Set(businesses.map(b => b.location.split(',')[0]))].join(', ');
-            
-            document.querySelector('meta[name="description"]').content = 
-                `Find ${businesses.length}+ verified local businesses in Kenya. Browse ${categories} in ${cities}. Read reviews, get directions, and contact businesses directly.`;
-        }
+}
 
-        // Handle browser back/forward
-        window.addEventListener('popstate', () => {
-            const params = new URLSearchParams(window.location.search);
-            document.getElementById('searchInput').value = params.get('search') || '';
-            document.getElementById('locationSelect').value = params.get('location') || '';
-            document.getElementById('categorySelect').value = params.get('category') || '';
-            performSearch();
-        });
-
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        setTimeout(() => {
-            document.querySelectorAll('.business-card, .category-card').forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(card);
-            });
-        }, 100);
-        <div class="modal" id="detailModal">
-    <div class="modal-content" style="max-width: 700px;">
-        <div class="modal-header">
-            <h3 id="detailName">Business Name</h3>
-            <button class="close-btn" onclick="closeModal('detailModal')">×</button>
-        </div>
-        <div class="modal-body" id="detailBody">
-       </div>     
-    </script>
+// SEO Optimization
+function updateSEO() {
+    const categories = [...new Set(businesses.map(b => b.categoryDisplay))].join(', ');
+    const cities = [...new Set(businesses.map(b => b.location.split(',')[0]))].join(', ');
     
-            <!-- Content injected by JavaScript -->
-        
+    document.querySelector('meta[name="description"]').content = 
+        `Find ${businesses.length}+ verified local businesses in Kenya. Browse ${categories} in ${cities}. Read reviews, get directions, and contact businesses directly.`;
+}
+
+// Handle browser back/forward
+window.addEventListener('popstate', () => {
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById('searchInput').value = params.get('search') || '';
+    document.getElementById('locationSelect').value = params.get('location') || '';
+    document.getElementById('categorySelect').value = params.get('category') || '';
+    performSearch();
+});
+
+// Intersection Observer for animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+setTimeout(() => {
+    document.querySelectorAll('.business-card, .category-card').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
+    });
+}, 100);
+    </script>
+
+    <!-- Business Detail Modal -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 id="detailName">Business Name</h3>
+                <button class="close-btn" onclick="closeModal('detailModal')">×</button>
+            </div>
+            <div class="modal-body" id="detailBody">
+                <!-- Content injected by JavaScript -->
+            </div>
+        </div>
     </div>
-</div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-icon">✓</div>
+        <span id="toastMessage">Success!</span>
+    </div>
 </body>
 </html>
