@@ -1761,9 +1761,7 @@
     
     // Open modal
     openModal('detailModal');
-}
         }
-
         // SEO Optimization
         function updateSEO() {
             const categories = [...new Set(businesses.map(b => b.categoryDisplay))].join(', ');
@@ -1805,16 +1803,18 @@
                 observer.observe(card);
             });
         }, 100);
-    </script>
-    <div class="modal" id="detailModal">
+        <div class="modal" id="detailModal">
     <div class="modal-content" style="max-width: 700px;">
         <div class="modal-header">
             <h3 id="detailName">Business Name</h3>
             <button class="close-btn" onclick="closeModal('detailModal')">×</button>
         </div>
         <div class="modal-body" id="detailBody">
+       </div>     
+    </script>
+    
             <!-- Content injected by JavaScript -->
-        </div>
+        
     </div>
 </div>
 </body>
