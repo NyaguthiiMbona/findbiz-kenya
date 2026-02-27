@@ -1120,22 +1120,31 @@
 
     <!-- CTA Section -->
     <section class="cta" id="pricing">
-        <div class="container">
-            <div class="cta-box">
-                <span class="pricing-tag">Limited Time: 50% OFF</span>
-                <h2>List Your Business Today</h2>
-                <p>Get discovered by thousands of potential customers in Kenya. Basic listing is FREE forever. Upgrade to Premium for featured placement and advanced analytics.</p>
-                <div style="margin: 1.5rem 0;">
-                    <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">KSh 1,500<span style="font-size: 1rem; color: var(--text-light);">/month</span></div>
-                    <div style="text-decoration: line-through; color: var(--text-light);">KSh 3,000/month</div>
-                </div>
-                <button class="btn btn-primary" style="font-size: 1.1rem; padding: 0.75rem 2rem;" onclick="openPaymentModal()">
-                    Get Started Now
-                </button>
-                <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-light);">Free basic listing - Cancel anytime - Instant activation</p>
-            </div>
+    <div class="cta-box">
+        <h2>Own a Business in Kenya?</h2>
+        <p>Get discovered by thousands of local customers searching right now.</p>
+        
+        <div style="text-align: left; margin: 1.5rem 0;">
+            <h4 style="color: var(--primary); margin-bottom: 1rem;">Free Listing Includes:</h4>
+            <ul style="list-style: none; margin-bottom: 1.5rem;">
+                <li style="margin-bottom: 0.5rem;">✓ Business name and contact info</li>
+                <li style="margin-bottom: 0.5rem;">✓ Appear in "Near Me" searches</li>
+                <li style="margin-bottom: 0.5rem;">✓ Customer calls and directions</li>
+                <li style="margin-bottom: 0.5rem;">✓ Verified business badge</li>
+            </ul>
         </div>
-    </section>
+        
+        <button class="btn btn-primary" style="font-size: 1.1rem; padding: 0.75rem 2rem;" onclick="openModal('listModal')">
+            Add Your Business - FREE
+        </button>
+        
+        <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-light);">
+            <strong>Want more customers?</strong> 
+            <a href="#" onclick="openPaymentModal()" style="color: var(--primary);">Upgrade to Premium</a> 
+            for featured placement (KSh 1,500/mo)
+        </p>
+    </div>
+</section>
 
     <!-- Footer -->
     <footer>
