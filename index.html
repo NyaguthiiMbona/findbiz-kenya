@@ -982,8 +982,8 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>Discover Kenya's Best Local Businesses</h1>
-            <p>Find trusted restaurants, salons, mechanics, and SMEs in Nairobi, Mombasa, Kisumu, and across Kenya. Verified reviews and instant contact.</p>
+            <h1>Find Local Businesses Near You</h1>
+            <p>Discover verified restaurants, salons, mechanics, and shops within minutes of your location. Real reviews, instant contact, directions.</p>
         </div>
     </section>
 
@@ -1177,7 +1177,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 FindBiz Kenya. All rights reserved. | <a href="#" style="color: rgba(255,255,255,0.6);">Privacy Policy</a> | <a href="#" style="color: rgba(255,255,255,0.6);">Terms of Service</a></p>
+                <p>&copy; 2026 FindBiz Kenya. All rights reserved. | <a href="#" style="color: rgba(255,255,255,0.6);">Privacy Policy</a> | <a href="#" style="color: rgba(255,255,255,0.6);">Terms of Service</a></p>
             </div>
         </div>
     </footer>
@@ -1429,6 +1429,16 @@
                 phone: "+254 767 890 123",
                 description: "Authentic African crafts and souvenirs"
             }
+            // Reset search to show all
+function resetSearch() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('locationSelect').value = '';
+    document.getElementById('categorySelect').value = '';
+    filteredBusinesses = [...businesses];
+    currentPage = 1;
+    renderListings();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    } 
         ];
 
         let currentPage = 1;
