@@ -993,37 +993,84 @@
             <div class="search-input-group">
                 <label>What are you looking for?</label>
                 <input type="text" id="searchInput" placeholder="e.g., 'nyama choma', 'hair salon', 'mechanic'">
-            </div>
-            <div class="search-input-group">
-                <label>Location</label>
-                <select id="locationSelect">
-                    <option value="">All of Kenya</option>
-                    <option value="nairobi">Nairobi</option>
-                    <option value="mombasa">Mombasa</option>
-                    <option value="kisumu">Kisumu</option>
-                    <option value="nakuru">Nakuru</option>
-                    <option value="eldoret">Eldoret</option>
-                    <option value="thika">Thika</option>
-                </select>
-                <div class="search-input-group">
+            </div><div class="search-input-group">
     <label>Neighborhood</label>
     <select id="neighborhoodSelect" onchange="filterByNeighborhood()">
-        <option value="">All of Nairobi</option>
-        <option value="westlands">Westlands</option>
-        <option value="parklands">Parklands</option>
-        <option value="cbd">Nairobi CBD</option>
-        <option value="kilimani">Kilimani</option>
-        <option value="ngong-road">Ngong Road</option>
-        <option value="eastleigh">Eastleigh</option>
-        <option value="south-b">South B</option>
-        <option value="south-c">South C</option>
-        <option value="karen">Karen</option>
-        <option value="langata">Langata</option>
-        <option value="roysambu">Roysambu</option>
-        <option value="kasarani">Kasarani</option>
-        <option value="embakasi">Embakasi</option>
-        <option value="industrial-area">Industrial Area</option>
-        <option value="upper-hill">Upper Hill</option>
+        <option value="">All Areas</option>
+        
+        <optgroup label="Nairobi">
+            <option value="westlands">Westlands</option>
+            <option value="parklands">Parklands</option>
+            <option value="cbd">Nairobi CBD</option>
+            <option value="kilimani">Kilimani</option>
+            <option value="ngong-road">Ngong Road</option>
+            <option value="eastleigh">Eastleigh</option>
+            <option value="south-b">South B</option>
+            <option value="south-c">South C</option>
+            <option value="karen">Karen</option>
+            <option value="langata">Langata</option>
+            <option value="roysambu">Roysambu</option>
+            <option value="kasarani">Kasarani</option>
+            <option value="embakasi">Embakasi</option>
+            <option value="industrial-area">Industrial Area</option>
+            <option value="upper-hill">Upper Hill</option>
+            <option value="runda">Runda</option>
+            <option value="muthaiga">Muthaiga</option>
+            <option value="lavington">Lavington</option>
+            <option value="riverside">Riverside</option>
+            <option value="gigiri">Gigiri</option>
+            <option value="hurlingham">Hurlingham</option>
+            <option value="valley-arcade">Valley Arcade</option>
+            <option value="ongata-rongai">Ongata Rongai</option>
+            <option value="athi-river">Athi River</option>
+            <option value="mlolongo">Mlolongo</option>
+        </optgroup>
+        
+        <optgroup label="Mombasa">
+            <option value="nyali">Nyali</option>
+            <option value="bamburi">Bamburi</option>
+            <option value="shanzu">Shanzu</option>
+            <option value="mtwapa">Mtwapa</option>
+            <option value="kisauni">Kisauni</option>
+            <option value="changamwe">Changamwe</option>
+            <option value="likoni">Likoni</option>
+            <option value="mvita">Mvita (CBD)</option>
+            <option value="tudor">Tudor</option>
+            <option value="bombolulu">Bombolulu</option>
+        </optgroup>
+        
+        <optgroup label="Kisumu">
+            <option value="milimani-kisumu">Milimani</option>
+            <option value="nyalenda">Nyalenda</option>
+            <option value="manyatta">Manyatta</option>
+            <option value="kondele">Kondele</option>
+            <option value="mamboleo">Mamboleo</option>
+            <option value="airport-area">Airport Area</option>
+            <option value="dunga">Dunga</option>
+            <option value="nyamasaria">Nyamasaria</option>
+        </optgroup>
+        
+        <optgroup label="Eldoret">
+            <option value="eldoret-cbd">Eldoret Town</option>
+            <option value="kapsoya">Kapsoya</option>
+            <option value="annex">Annex</option>
+            <option value="langas">Langas</option>
+            <option value="huruma">Huruma</option>
+            <option value="kipkaren">Kipkaren</option>
+            <option value="chepkoilel">Chepkoilel</option>
+            <option value="elgon-view">Elgon View</option>
+        </optgroup>
+        
+        <optgroup label="Nakuru">
+            <option value="nakuru-cbd">Nakuru Town</option>
+            <option value="milimani-nakuru">Milimani</option>
+            <option value="london">London</option>
+            <option value="kapkures">Kapkures</option>
+            <option value="lanet">Lanet</option>
+            <option value="njoro">Njoro</option>
+        </optgroup>
+    </select>
+</div>
     </select>
 </div>
             </div>
