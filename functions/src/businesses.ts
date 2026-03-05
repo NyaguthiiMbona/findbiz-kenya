@@ -170,7 +170,7 @@ router.get('/', async (req, res) => {
     const limitNum = Math.min(parseInt(limit as string), 50);
     
     // Use Algolia for text search, Firestore for filters
-    if (q && typeof q === 'string && q.length > 0) {
+    if (q && typeof q === 'string' && q.length > 0) {
       const searchParams: any = {
         hitsPerPage: limitNum,
         page: pageNum - 1,
