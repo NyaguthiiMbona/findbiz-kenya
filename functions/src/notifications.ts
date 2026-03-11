@@ -70,8 +70,14 @@ export const onPaymentSuccess = functions.firestore
       const business = await db.collection('businesses').doc(after.businessId).get();
       const businessData = business.data();
       
+      // Exit early if no business data
+      if (!businessData) {
+        console.error('Business not found:', after.businessId);
+        return;
+      }
+      
       // Send receipt email
-      if (businessData.contact.email) {
+      if (businessData?.contact?.email) {
         await sendEmail({
           to: businessData.contact.email,
           subject: 'Payment Confirmation - FindBiz Premium',
@@ -81,7 +87,7 @@ export const onPaymentSuccess = functions.firestore
             <p><strong>Amount:</strong> KSh ${after.amount}</p>
             <p><strong>M-Pesa Receipt:</strong> ${after.mpesaReceipt}</p>
             <p><strong>Valid Until:</strong> ${after.expiresAt?.toDate().toLocaleDateString()}</p>
-            <p>Your business is now featured and will appear at the top of search results.</p>
+            <p>Your business "${businessData?.name || 'Your business'}" is now featured and will appear at the top of search results.</p>
           `
         });
       }
@@ -89,7 +95,7 @@ export const onPaymentSuccess = functions.firestore
       // SMS confirmation
       await sendSMS({
         to: after.phone,
-        message: `FindBiz: Payment of KSh ${after.amount} received! Your business "${businessData.name}" is now featured. Receipt: ${after.mpesaReceipt}`
+        message: `FindBiz: Payment of KSh ${after.amount} received! Your business "${businessData?.name || 'Your business'}" is now featured. Receipt: ${after.mpesaReceipt}`
       });
     }
   });
@@ -111,7 +117,7 @@ export const subscriptionReminders = functions.pubsub
       const data = doc.data();
       
       // Send renewal reminder
-      if (data.contact.email) {
+      if (data?.contact?.email) {
         await sendEmail({
           to: data.contact.email,
           subject: 'Your FindBiz Subscription Expires Soon',
@@ -125,10 +131,12 @@ export const subscriptionReminders = functions.pubsub
       }
       
       // SMS reminder
-      await sendSMS({
-        to: data.contact.phone,
-        message: `FindBiz: Your premium listing for ${data.name} expires in 3 days. Renew at findbiz.co.ke/renew to stay featured.`
-      });
+      if (data?.contact?.phone) {
+        await sendSMS({
+          to: data.contact.phone,
+          message: `FindBiz: Your premium listing for ${data.name} expires in 3 days. Renew at findbiz.co.ke/renew to stay featured.`
+        });
+      }
     }
     
     console.log(`Sent ${expiring.size} renewal reminders`);
@@ -167,17 +175,23 @@ router.post('/send', async (req, res) => {
   
   const data = business.data();
   
+  if (!data || !data.contact) {
+    return res.status(404).json({ error: 'Business contact data not found' });
+  }
+  
   if (type === 'sms') {
-    await sendSMS({ to: data.contact.phone, message });
+    await sendSMS({ to: data.contact?.phone, message });
   } else if (type === 'email') {
     await sendEmail({
-      to: data.contact.email,
+      to: data.contact?.email,
       subject: 'Message from FindBiz',
       html: message
     });
+  } else {
+    return res.status(400).json({ error: 'Invalid notification type. Use sms or email' });
   }
   
-  res.json({ success: true });
+  return res.json({ success: true });
 });
 
 export { router as notificationRoutes };
