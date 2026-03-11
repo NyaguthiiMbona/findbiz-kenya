@@ -2,7 +2,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as express from 'express';
-import cors = require('cors');
+import * as cors from 'cors';
 import { businessRoutes } from './businesses';
 import { paymentRoutes } from './payments';
 import { seoRoutes } from './seo';
