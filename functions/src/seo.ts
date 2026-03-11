@@ -16,7 +16,7 @@ router.get('/business/:id', async (req, res) => {
       return res.status(404).send('Not found');
     }
     
-        const data = business.data();
+    const data = business.data();
     
     if (!data || !data.seo) {
       return res.status(404).send('Business data not found');
@@ -48,7 +48,7 @@ router.get('/business/:id', async (req, res) => {
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
 ${JSON.stringify({
- "@context": "https://schema.org",
+  "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": data.name,
   "description": data.description,
@@ -71,7 +71,7 @@ ${JSON.stringify({
     "reviewCount": data.reviewCount || 0
   } : undefined,
   "priceRange": "$$",
-  "openingHours": "Mo-Sa 08:00-18:00" // Default, should be customized
+  "openingHours": "Mo-Sa 08:00-18:00"
 }, null, 2)}
     </script>
     
@@ -109,11 +109,11 @@ ${JSON.stringify({
         <p>📍 ${data.location?.address || ''}, ${data.location?.city || ''}</p>
         <p>📞 <a href="tel:${data.contact?.phone || ''}">${data.contact?.phone || ''}</a></p>
         ${data.contact?.email ? `<p>✉️ <a href="mailto:${data.contact.email}">${data.contact.email}</a></p>` : ''}
-        ${data.contact?.website ?`<p>🌐 <a href="${data.contact.website}" target="_blank">${data.contact.website}</a></p>` : ''}
+        ${data.contact?.website ? `<p>🌐 <a href="${data.contact.website}" target="_blank">${data.contact.website}</a></p>` : ''}
     </div>
     
     <div>
-        <a href="tel:${data.contact.phone}" class="btn">Call Now</a>
+        <a href="tel:${data.contact?.phone || ''}" class="btn">Call Now</a>
         <a href="https://wa.me/${data.contact?.whatsapp || data.contact?.phone?.replace(/\D/g, '')}" class="btn">WhatsApp</a>
         <a href="/" class="btn" style="background: #666;">Browse More Businesses</a>
     </div>
@@ -136,7 +136,7 @@ ${JSON.stringify({
 // Generate city/category landing pages
 router.get('/landing/:type/:slug', async (req, res) => {
   try {
-    const { type, slug } = req.params; // type: 'city' or 'category'
+    const { type, slug } = req.params;
     
     let title, description, businesses;
     
@@ -218,12 +218,13 @@ router.get('/landing/:type/:slug', async (req, res) => {
     res.status(500).send('Error generating page');
   }
 });
+
 // Generate XML Sitemap for SEO
 router.get('/sitemap.xml', async (req, res) => {
   try {
     const businessesSnapshot = await db.collection('businesses')
       .where('status', '==', 'active')
-      .select('updatedAt')  // Only fetch what we need
+      .select('updatedAt')
       .get();
     
     const citiesSnapshot = await db.collection('businesses')
@@ -231,8 +232,7 @@ router.get('/sitemap.xml', async (req, res) => {
       .select('location.city')
       .get();
     
-    // Extract unique cities
-    const cities = new Set();
+    const cities = new Set<string>();
     citiesSnapshot.forEach(doc => {
       const city = doc.data().location?.city;
       if (city) cities.add(city);
@@ -251,7 +251,6 @@ router.get('/sitemap.xml', async (req, res) => {
     <priority>0.8</priority>
   </url>`;
 
-    // Add city pages
     cities.forEach(city => {
       const citySlug = city.toLowerCase().replace(/\s+/g, '-');
       xml += `
@@ -262,7 +261,6 @@ router.get('/sitemap.xml', async (req, res) => {
   </url>`;
     });
 
-    // Add business pages
     businessesSnapshot.forEach(doc => {
       const lastmod = doc.data().updatedAt?.toDate().toISOString().split('T')[0] || new Date().toISOString().split('T')[0];
       xml += `
@@ -284,4 +282,5 @@ router.get('/sitemap.xml', async (req, res) => {
     res.status(500).send('Error generating sitemap');
   }
 });
+
 export { router as seoRoutes };
