@@ -16,7 +16,11 @@ router.get('/business/:id', async (req, res) => {
       return res.status(404).send('Not found');
     }
     
-    const data = business.data();
+        const data = business.data();
+    
+    if (!data || !data.seo) {
+      return res.status(404).send('Business data not found');
+    }
     
     // Generate rich HTML with Schema.org markup
     const html = `
@@ -25,48 +29,46 @@ router.get('/business/:id', async (req, res) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${data.seo.title}</title>
-    <meta name="description" content="${data.seo.description}">
-    <meta name="keywords" content="${data.seo.keywords.join(', ')}">
+    <title>${data.seo.title || data.name}</title>
+    <meta name="description" content="${data.seo.description || ''}">
+    <meta name="keywords" content="${(data.seo.keywords || []).join(', ')}">
     
     <!-- Open Graph -->
     <meta property="og:title" content="${data.name}">
-    <meta property="og:description" content="${data.description.substring(0, 200)}">
+    <meta property="og:description" content="${data.description?.substring(0, 200) || ''}">
     <meta property="og:type" content="business.business">
-    <meta property="og:url" content="https://findbiz.co.ke/business/${id}">
-    ${data.images.logo ? `<meta property="og:image" content="${data.images.logo}">` : ''}
+    <meta property="og:url" content="https://findbiz.co.ke/business/${id}"}">
+    ${data.images?.logo ? `<meta property="og:image" content="${data.images.logo}">` : ''}
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${data.name}">
-    <meta name="twitter:description" content="${data.description.substring(0, 200)}">
+    <meta name="twitter:description" content=${data.description?.substring(0, 200) || ''}">
     
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
 ${JSON.stringify({
-  "@context": "https://schema.org",
+ "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": data.name,
   "description": data.description,
-  "image": data.images.logo || data.images.cover,
+  "image": data.images?.logo || data.images?.cover || '',
   "url": `https://findbiz.co.ke/business/${id}`,
-  "telephone": data.contact.phone,
-  "email": data.contact.email,
+  "telephone": data.contact?.phone || '',
+  "email": data.contact?.email || '',
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": data.location.address,
-    "addressLocality": data.location.city,
+    "streetAddress": data.location?.address || '',
+    "addressLocality": data.location?.city || '',
     "addressCountry": "KE"
   },
-  "geo": data.location.coordinates ? {
-    "@type": "GeoCoordinates",
+  "geo": data.location?.coordinates ? {
     "latitude": data.location.coordinates.latitude,
     "longitude": data.location.coordinates.longitude
   } : undefined,
-  "aggregateRating": data.rating > 0 ? {
-    "@type": "AggregateRating",
+  "aggregateRating": data.rating && data.rating > 0 ? {
     "ratingValue": data.rating,
-    "reviewCount": data.reviewCount
+    "reviewCount": data.reviewCount || 0
   } : undefined,
   "priceRange": "$$",
   "openingHours": "Mo-Sa 08:00-18:00" // Default, should be customized
@@ -90,12 +92,12 @@ ${JSON.stringify({
         <h1 class="business-name">${data.name}</h1>
         <div class="business-meta">
             ${data.isVerified ? '✓ Verified Business • ' : ''}
-            ${data.category} • ${data.location.city}
+            ${data.category} • ${data.location?.city || ''}
         </div>
-        ${data.rating > 0 ? `
+        ${data.rating && data.rating > 0 ? `
         <div class="rating">
             ${'★'.repeat(Math.round(data.rating))}${'☆'.repeat(5-Math.round(data.rating))}
-            <span style="color: #666; font-size: 1rem;">(${data.reviewCount} reviews)</span>
+            <span style="color: #666; font-size: 1rem;">(${data.reviewCount || 0} reviews)</span>
         </div>
         ` : ''}
     </article>
@@ -104,15 +106,15 @@ ${JSON.stringify({
     
     <div class="contact-info">
         <h3>Contact Information</h3>
-        <p>📍 ${data.location.address}, ${data.location.city}</p>
-        <p>📞 <a href="tel:${data.contact.phone}">${data.contact.phone}</a></p>
+        <p>📍 ${data.location?.address || ''}, ${data.location?.city || ''}</p>
+        <p>📞 href="tel:${data.contact?.phone || ''}"</a></p>
         ${data.contact.email ? `<p>✉️ <a href="mailto:${data.contact.email}">${data.contact.email}</a></p>` : ''}
         ${data.contact.website ? `<p>🌐 <a href="${data.contact.website}" target="_blank">${data.contact.website}</a></p>` : ''}
     </div>
     
     <div>
         <a href="tel:${data.contact.phone}" class="btn">Call Now</a>
-        <a href="https://wa.me/${data.contact.whatsapp || data.contact.phone.replace(/\D/g, '')}" class="btn">WhatsApp</a>
+        href="https://wa.me/${data.contact?.whatsapp || data.contact.phone.replace(/\D/g, '')}" class="btn">WhatsApp</a>
         <a href="/" class="btn" style="background: #666;">Browse More Businesses</a>
     </div>
     
@@ -171,8 +173,8 @@ router.get('/landing/:type/:slug', async (req, res) => {
     const businessList = businesses.map(b => `
       <article style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #eee;">
         <h2><a href="/business/${b.id}" style="color: #2E7D32; text-decoration: none;">${b.name}</a></h2>
-        <p style="color: #666;">${b.category} • ${b.location.city}</p>
-        <p>${b.description.substring(0, 150)}...</p>
+        <p style="color: #666;">${b.category} • ${b.location?.city || ''}</p>
+        <p>${b.description?.substring(0, 150) || ''}}...</p>
         <div style="color: #FFC107;">${'★'.repeat(Math.round(b.rating || 0))}</div>
       </article>
     `).join('');
@@ -216,5 +218,70 @@ router.get('/landing/:type/:slug', async (req, res) => {
     res.status(500).send('Error generating page');
   }
 });
+// Generate XML Sitemap for SEO
+router.get('/sitemap.xml', async (req, res) => {
+  try {
+    const businessesSnapshot = await db.collection('businesses')
+      .where('status', '==', 'active')
+      .select('updatedAt')  // Only fetch what we need
+      .get();
+    
+    const citiesSnapshot = await db.collection('businesses')
+      .where('status', '==', 'active')
+      .select('location.city')
+      .get();
+    
+    // Extract unique cities
+    const cities = new Set();
+    citiesSnapshot.forEach(doc => {
+      const city = doc.data().location?.city;
+      if (city) cities.add(city);
+    });
 
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://findbiz.co.ke/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://findbiz.co.ke/categories</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+
+    // Add city pages
+    cities.forEach(city => {
+      const citySlug = city.toLowerCase().replace(/\s+/g, '-');
+      xml += `
+  <url>
+    <loc>https://findbiz.co.ke/city/${citySlug}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+    });
+
+    // Add business pages
+    businessesSnapshot.forEach(doc => {
+      const lastmod = doc.data().updatedAt?.toDate().toISOString().split('T')[0] || new Date().toISOString().split('T')[0];
+      xml += `
+  <url>
+    <loc>https://findbiz.co.ke/business/${doc.id}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>`;
+    });
+
+    xml += '\n</urlset>';
+
+    res.set('Content-Type', 'application/xml');
+    res.send(xml);
+    
+  } catch (error) {
+    console.error('Sitemap generation error:', error);
+    res.status(500).send('Error generating sitemap');
+  }
+});
 export { router as seoRoutes };
