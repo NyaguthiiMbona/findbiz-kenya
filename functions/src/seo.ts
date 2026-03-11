@@ -37,13 +37,13 @@ router.get('/business/:id', async (req, res) => {
     <meta property="og:title" content="${data.name}">
     <meta property="og:description" content="${data.description?.substring(0, 200) || ''}">
     <meta property="og:type" content="business.business">
-    <meta property="og:url" content="https://findbiz.co.ke/business/${id}"}">
+    <meta property="og:url" content="https://findbiz.co.ke/business/${id}">
     ${data.images?.logo ? `<meta property="og:image" content="${data.images.logo}">` : ''}
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${data.name}">
-    <meta name="twitter:description" content=${data.description?.substring(0, 200) || ''}">
+    <meta name="twitter:description" content="${data.description?.substring(0, 200) || ''}">
     
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
@@ -107,14 +107,14 @@ ${JSON.stringify({
     <div class="contact-info">
         <h3>Contact Information</h3>
         <p>📍 ${data.location?.address || ''}, ${data.location?.city || ''}</p>
-        <p>📞 href="tel:${data.contact?.phone || ''}"</a></p>
-        ${data.contact.email ? `<p>✉️ <a href="mailto:${data.contact.email}">${data.contact.email}</a></p>` : ''}
-        ${data.contact.website ? `<p>🌐 <a href="${data.contact.website}" target="_blank">${data.contact.website}</a></p>` : ''}
+        <p>📞 <a href="tel:${data.contact?.phone || ''}">${data.contact?.phone || ''}</a></p>
+        ${data.contact?.email ? `<p>✉️ <a href="mailto:${data.contact.email}">${data.contact.email}</a></p>` : ''}
+        ${data.contact?.website ?`<p>🌐 <a href="${data.contact.website}" target="_blank">${data.contact.website}</a></p>` : ''}
     </div>
     
     <div>
         <a href="tel:${data.contact.phone}" class="btn">Call Now</a>
-        href="https://wa.me/${data.contact?.whatsapp || data.contact.phone.replace(/\D/g, '')}" class="btn">WhatsApp</a>
+        <a href="https://wa.me/${data.contact?.whatsapp || data.contact?.phone?.replace(/\D/g, '')}" class="btn">WhatsApp</a>
         <a href="/" class="btn" style="background: #666;">Browse More Businesses</a>
     </div>
     
@@ -174,7 +174,7 @@ router.get('/landing/:type/:slug', async (req, res) => {
       <article style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #eee;">
         <h2><a href="/business/${b.id}" style="color: #2E7D32; text-decoration: none;">${b.name}</a></h2>
         <p style="color: #666;">${b.category} • ${b.location?.city || ''}</p>
-        <p>${b.description?.substring(0, 150) || ''}}...</p>
+        <p>${b.description?.substring(0, 150) || ''}...</p>
         <div style="color: #FFC107;">${'★'.repeat(Math.round(b.rating || 0))}</div>
       </article>
     `).join('');
