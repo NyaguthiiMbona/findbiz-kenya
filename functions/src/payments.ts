@@ -2,7 +2,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { Router } from 'express';
-import * as axios from 'axios';
+import axios from 'axios';
 
 const router = Router();
 const db = admin.firestore();
@@ -62,7 +62,7 @@ router.post('/initialize', async (req, res) => {
       comment: `FindBiz ${plan} subscription`
     };
     
-    const response = await axios.default.post(
+    const response = await axios.post(
       `${INTASEND_CONFIG.baseUrl}/payment/checkout/`,
       payload,
       {
@@ -87,7 +87,7 @@ router.post('/initialize', async (req, res) => {
       message: 'Redirect to Intasend checkout'
     });
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('Intasend init error:', error.response?.data || error.message);
     res.status(500).json({ 
       error: 'Payment initialization failed',
