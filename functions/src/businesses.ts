@@ -2,7 +2,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { Router } from 'express';
-import algoliasearch from 'algoliasearch';';
+iimport algoliasearch from 'algoliasearch';
 
 const router = Router();
 const db = admin.firestore();
