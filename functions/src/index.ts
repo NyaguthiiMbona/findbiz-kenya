@@ -65,27 +65,26 @@ export const generateSitemap = functions.pubsub
       .where('status', '==', 'active')
       .get();
     
-    let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://findbiz.co.ke/</loc>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>`;
+    let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    sitemap += '  <url>\n';
+    sitemap += '    <loc>https://findbiz.co.ke/</loc>\n';
+    sitemap += '    <changefreq>daily</changefreq>\n';
+    sitemap += '    <priority>1.0</priority>\n';
+    sitemap += '  </url>\n';
     
     businesses.forEach(doc => {
       const data = doc.data();
       const lastmod = data.updatedAt?.toDate?.().toISOString() || new Date().toISOString();
-      sitemap += `
-  <url>
-    <loc>https://findbiz.co.ke/business/${doc.id}</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>${data.isFeatured ? '0.8' : '0.6'}</priority>
-  </url>`;
+      sitemap += '  <url>\n';
+      sitemap += `    <loc>https://findbiz.co.ke/business/${doc.id}</loc>\n`;
+      sitemap += `    <lastmod>${lastmod}</lastmod>\n`;
+      sitemap += '    <changefreq>weekly</changefreq>\n';
+      sitemap += `    <priority>${data.isFeatured ? '0.8' : '0.6'}</priority>\n`;
+      sitemap += '  </url>\n';
     });
     
-    sitemap += '\n</urlset>';
+    sitemap += '</urlset>';
     
     const bucket = admin.storage().bucket();
     const file = bucket.file('sitemaps/businesses.xml');
