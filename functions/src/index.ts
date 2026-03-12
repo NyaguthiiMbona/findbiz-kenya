@@ -2,7 +2,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as express from 'express';
-import * as cors from 'cors';
+import cors = require('cors');
 import { businessRoutes } from './businesses';
 import { paymentRoutes } from './payments';
 import { seoRoutes } from './seo';
@@ -66,20 +66,26 @@ export const generateSitemap = functions.pubsub
       .get();
     
     let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://findbiz.co.ke/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>`;
     
     businesses.forEach(doc => {
       const data = doc.data();
+      const lastmod = data.updatedAt?.toDate?.().toISOString() || new Date().toISOString();
       sitemap += `
   <url>
-    `<loc>https://findbiz.co.ke/business/${doc.id}</loc>`;
-    <lastmod>${data.updatedAt.toDate().toISOString()}</lastmod>
+    <loc>https://findbiz.co.ke/business/${doc.id}</loc>
+    <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>${data.isFeatured ? '0.8' : '0.6'}</priority>
   </url>`;
     });
     
-    sitemap += '</urlset>';
+    sitemap += '\n</urlset>';
     
     const bucket = admin.storage().bucket();
     const file = bucket.file('sitemaps/businesses.xml');
