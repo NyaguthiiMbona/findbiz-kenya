@@ -1,14 +1,16 @@
 // functions/src/index.ts
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import express from 'express';
+
+// Initialize Firebase FIRST (before any routes that use it)
+admin.initializeApp();
+
+import * as express from 'express';
 import cors = require('cors');
 import { businessRoutes } from './businesses';
 import { paymentRoutes } from './payments';
 import { seoRoutes } from './seo';
 import { notificationRoutes } from './notifications';
-
-admin.initializeApp();
 
 const app = express();
 app.use(cors({ origin: true }));
@@ -53,7 +55,6 @@ export const cleanupExpiredListings = functions.pubsub
       });
     });
     
-         await batch.commit();
+    await batch.commit();
     console.log(`Downgraded ${expired.size} expired listings`);
   });
-});
