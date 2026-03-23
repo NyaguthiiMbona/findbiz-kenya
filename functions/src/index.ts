@@ -1,7 +1,7 @@
 // functions/src/index.ts
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import * as express from 'express';
+import express from 'express';
 import cors = require('cors');
 import { businessRoutes } from './businesses';
 import { paymentRoutes } from './payments';
