@@ -53,6 +53,7 @@ export const cleanupExpiredListings = functions.pubsub
       });
     });
     
-        await batch.commit();
+         await batch.commit();
     console.log(`Downgraded ${expired.size} expired listings`);
   });
+});
