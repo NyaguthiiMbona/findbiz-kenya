@@ -5,18 +5,22 @@ import { Router } from 'express';
 import algoliasearch from 'algoliasearch';
 
 const router = Router();
-const db = admin.firestore();
 
-// Initialize Algolia for search (free tier: 10k records)
-const algoliaClient = algoliasearch(
-  functions.config().algolia.appid,
-  functions.config().algolia.apikey
-);
-const index = algoliaClient.initIndex('businesses');
+// Lazy initialization - only runs when needed
+const getDb = () => admin.firestore();
+const getIndex = () => {
+  const client = algoliasearch(
+    functions.config().algolia.appid,
+    functions.config().algolia.apikey
+  );
+  return client.initIndex('businesses');
+};
 
 // CREATE Business
 router.post('/', async (req, res) => {
   try {
+    const db = getDb();
+    const index = getIndex();
     const { name, category, location, contact, description, ownerId } = req.body;
     
     // Validation
@@ -40,14 +44,14 @@ router.post('/', async (req, res) => {
     
     const businessData = {
       name: name.trim(),
-      nameLower: name.toLowerCase(), // For case-insensitive search
+      nameLower: name.toLowerCase(),
       category,
       categoryLower: category.toLowerCase(),
       location: {
         city: location.city,
         area: location.area || '',
         address: location.address || '',
-        coordinates: location.coordinates || null // GeoPoint
+        coordinates: location.coordinates || null
       },
       contact: {
         phone: contact.phone,
@@ -63,7 +67,7 @@ router.post('/', async (req, res) => {
       },
       rating: 0,
       reviewCount: 0,
-      status: 'pending', // Requires approval
+      status: 'pending',
       isFeatured: false,
       isVerified: false,
       ownerId: ownerId || null,
@@ -89,7 +93,6 @@ router.post('/', async (req, res) => {
     
     const docRef = await db.collection('businesses').add(businessData);
     
-    // Add to Algolia for search
     await index.saveObject({
       objectID: docRef.id,
       ...businessData,
@@ -97,7 +100,6 @@ router.post('/', async (req, res) => {
       updatedAt: Date.now()
     });
     
-    // Send notification to admin
     await db.collection('notifications').add({
       type: 'new_listing',
       businessId: docRef.id,
@@ -118,12 +120,12 @@ router.post('/', async (req, res) => {
   }
 });
 
-// READ Business (with caching)
+// READ Business
 router.get('/:id', async (req, res) => {
   try {
+    const db = getDb();
     const { id } = req.params;
     
-    // Track view (async, don't wait)
     db.collection('businesses').doc(id).collection('analytics').add({
       type: 'view',
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
@@ -139,7 +141,6 @@ router.get('/:id', async (req, res) => {
     
     const data = doc.data();
     
-    // Increment view counter (batched for performance)
     db.collection('businesses').doc(id).update({
       'stats.views': admin.firestore.FieldValue.increment(1)
     }).catch(console.error);
@@ -152,24 +153,25 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// SEARCH Businesses (with filters)
+// SEARCH Businesses
 router.get('/', async (req, res) => {
   try {
+    const db = getDb();
+    const index = getIndex();
     const {
-      q, // search query
+      q,
       category,
       city,
       featured,
       verified,
       page = '1',
       limit = '20',
-      sortBy = 'relevance' // relevance, rating, newest, distance
+      sortBy = 'relevance'
     } = req.query;
     
     const pageNum = parseInt(page as string);
     const limitNum = Math.min(parseInt(limit as string), 50);
     
-    // Use Algolia for text search, Firestore for filters
     if (q && typeof q === 'string' && q.length > 0) {
       const searchParams: any = {
         hitsPerPage: limitNum,
@@ -195,7 +197,6 @@ router.get('/', async (req, res) => {
       });
     }
     
-    // Firestore query for browse (no text search)
     let query: any = db.collection('businesses')
       .where('status', '==', 'active')
       .orderBy('isFeatured', 'desc')
@@ -223,7 +224,6 @@ router.get('/', async (req, res) => {
       ...doc.data()
     }));
     
-    // Get total count (approximate for performance)
     const countSnapshot = await db.collection('businesses')
       .where('status', '==', 'active')
       .count().get();
@@ -247,10 +247,11 @@ router.get('/', async (req, res) => {
 // UPDATE Business
 router.patch('/:id', async (req, res) => {
   try {
+    const db = getDb();
+    const index = getIndex();
     const { id } = req.params;
     const updates = req.body;
     
-    // Remove protected fields
     delete updates.status;
     delete updates.isVerified;
     delete updates.createdAt;
@@ -260,7 +261,6 @@ router.patch('/:id', async (req, res) => {
     
     await db.collection('businesses').doc(id).update(updates);
     
-    // Sync to Algolia
     await index.partialUpdateObject({
       objectID: id,
       ...updates
@@ -277,6 +277,7 @@ router.patch('/:id', async (req, res) => {
 // CLAIM Business
 router.post('/:id/claim', async (req, res) => {
   try {
+    const db = getDb();
     const { id } = req.params;
     const { userId, registrationNumber, idDocument } = req.body;
     
@@ -291,17 +292,15 @@ router.post('/:id/claim', async (req, res) => {
       return res.status(409).json({ error: 'Business already claimed' });
     }
     
-    // Create claim request
     await db.collection('claims').add({
       businessId: id,
       userId,
       status: 'pending',
       registrationNumber,
-      idDocument, // URL to stored image
+      idDocument,
       submittedAt: admin.firestore.FieldValue.serverTimestamp()
     });
     
-    // Notify admin
     await db.collection('notifications').add({
       type: 'claim_request',
       businessId: id,
@@ -322,11 +321,12 @@ router.post('/:id/claim', async (req, res) => {
   }
 });
 
-// Track interactions (call, direction, etc.)
+// Track interactions
 router.post('/:id/track', async (req, res) => {
   try {
+    const db = getDb();
     const { id } = req.params;
-    const { type } = req.body; // 'call', 'direction', 'website', 'whatsapp'
+    const { type } = req.body;
     
     const field = `stats.${type}s`;
     
@@ -334,7 +334,6 @@ router.post('/:id/track', async (req, res) => {
       [field]: admin.firestore.FieldValue.increment(1)
     });
     
-    // Log for analytics
     await db.collection('businesses').doc(id).collection('interactions').add({
       type,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
